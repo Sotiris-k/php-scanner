@@ -1,27 +1,20 @@
 <?php
-function listdirs_safe($start)
-{
-    $dir  = $start;
-    $dirs = array();
-    $next = 0;
 
-    while (true)
-    {
-        $_dirs = glob($dir.'{,.}/*.exe', GLOB_BRACE);
+function recursiveGlob($dir, $ext) {
+    $globFiles = glob("$dir/*.$ext");
+    $globDirs  = glob("$dir/*", GLOB_ONLYDIR);
 
-        if (count($_dirs) > 0)
-        {
-            foreach ($_dirs as $key => $_dir)
-                $dirs[] = $_dir;
-        }
-        else
-            break;
-            
-        $dir = $dirs[$next++];
+    foreach ($globDirs as $dir) {
+        recursiveGlob($dir, $ext);
     }
-    
-    return $dirs;
+
+    foreach ($globFiles as $file) {
+        print "$file\n"; // Replace '\n' with '<br />' if outputting to browser
+    }
 }
 
-var_dump(listdirs_safe('/*'));
+
+//only use in CLI mode because of extra large buffer and execution time
+recursiveGlob("/*","exe");
+
 ?>
