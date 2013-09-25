@@ -1,12 +1,8 @@
 <?php
-<<<<<<< HEAD
+
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 //solution to return *.exe files
-=======
 
-//error_reporting(E_ERROR | E_WARNING | E_PARSE);
-
->>>>>>> added debug mode and feedback
 function recursiveGlob($dir, $ext) {
     $array = array();
     $globFiles = glob("$dir/*.$ext");
