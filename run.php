@@ -121,12 +121,10 @@ if ($argv[1] == "compare") {
         $check = explode(" ", $line);
         if ($check[0] == "Hash:") {
             foreach ($clean_md5 as $clean_line_num => $clean_line) {
-                $clean = 0;
                 if ($check[1] == $clean_line) {
-                    $clean = 1;
                     break;
                 }
-                if (($clean_line_num + 1) == $clean_md5_size && $clean != 1) {
+                if (($clean_line_num + 1) == $clean_md5_size) {
                     echo "Suspicious file found -> ".$pathname[1]."\r\n";
                 }
             }
