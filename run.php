@@ -16,6 +16,7 @@ function recursiveGlob($dir, $ext) {
         if(!in_array($file,$array)) {
             array_push($array,$file);
         }
+        echo $file."\r\n";
     }
     return $array;
 }
@@ -31,9 +32,9 @@ if ($argv[1] == "help" || $argv[1] == null) {
     echo "Default values: --path=\"C:\Windows\" --extension=\"exe\" --log_file=\"C:\\md5_log_file.txt\" \r\n";
     echo "\r\n";
     echo "-- COMPARE MODE --\r\n";
-    echo "Usage: php run.php compare --log_file=path_and_name_of_log_file --md5_values_file=path_and_name_of_md5_values_file\r\n";
+    echo "Usage: php run.php compare --log_file=path_and_name_of_log_file --md5_values_file=path_and_name_of_md5_values_file --results_file=path_of_results_file \r\n";
     echo "\r\n";
-    echo "Example: php run.php compare --log_file=\"C:\\log_file_after_scan.txt\" --md5_values_file=\"C:\\file_with_clean_md5_values.txt \r\n";
+    echo "Example: php run.php compare --log_file=\"C:\\log_file_after_scan.txt\" --md5_values_file=\"C:\\file_with_clean_md5_values.txt --results_file=\"C:\\file_with_results.txt \r\n";
     echo "\r\n";
     die();
 }
@@ -102,6 +103,9 @@ if ($argv[1] == "compare") {
             case '--log_file':
             $log_file = $tempvar[1];
             break;
+            case '--results_file':
+            $results_file = $tempvar[1];
+            break;
             default:
             echo "error: loop defaulted\r\n";
             break;
@@ -116,6 +120,8 @@ if ($argv[1] == "compare") {
     $scanned = file($log_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     $clean_md5 = file($md5_values_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     $clean_md5_size = count($clean_md5);
+
+    $fh = fopen($results_file, "w") or die("can't open file \r\n");
     foreach ($scanned as $line_num => $line) {
         $check = explode(" ", $line);
         if ($check[0] == "Hash:") {
@@ -125,6 +131,8 @@ if ($argv[1] == "compare") {
                 }
                 if (($clean_line_num + 1) == $clean_md5_size) {
                     echo "Suspicious file found -> ".$pathname[1]."\r\n";
+                    $stringData = "Suspicious file found -> ".$pathname[1]."\r\n";
+                    fwrite($fh, $stringData);
                 }
             }
         }
@@ -132,6 +140,7 @@ if ($argv[1] == "compare") {
             $pathname = explode(": ", $line);
         }
     }
+    fclose($fh);
 }
 
 ?>
