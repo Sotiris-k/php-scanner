@@ -4,6 +4,7 @@ error_reporting(E_ERROR | E_WARNING | E_PARSE);
 //solution to return *.exe files
 $array = array();
 function recursiveGlob($dir, $ext) {
+    global $array;
     $globFiles = glob("$dir/*.$ext");
     $globDirs  = glob("$dir/*", GLOB_ONLYDIR);
 
