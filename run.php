@@ -81,9 +81,11 @@ if ($argv[1] == "scan") {
     $files = recursiveGlob($directory,$extension);
     $fh = fopen($log_file, "w") or die("can't open file \r\n");
     var_dump($files);
+    $i = 1;
     foreach ($files as $file) {
-        $stringData = "Found file: ".$file."\r\n";
+        $stringData = $i.") Found file: ".$file."\r\n";
         $stringData .= "Hash: ".md5_file($file)."\r\n";
+        $i++;
         fwrite($fh, $stringData);
     }
 
@@ -119,6 +121,7 @@ if ($argv[1] == "compare") {
     $scanned = file($log_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     $clean_md5 = file($md5_values_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     $clean_md5_size = count($clean_md5);
+    $i = 1;
 
     $fh = fopen($results_file, "w") or die("can't open file \r\n");
     foreach ($scanned as $line_num => $line) {
@@ -130,7 +133,8 @@ if ($argv[1] == "compare") {
                 }
                 if (($clean_line_num + 1) == $clean_md5_size) {
                     echo "Suspicious file found -> ".$pathname[1]."\r\n";
-                    $stringData = "Suspicious file found -> ".$pathname[1]."\r\n";
+                    $stringData = $i.") Suspicious file found -> ".$pathname[1]."\r\n";
+                    $i++;
                     fwrite($fh, $stringData);
                 }
             }
