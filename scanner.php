@@ -84,12 +84,12 @@ if ($argv[1] == "scan") {
     $i = 1;
     foreach ($files as $file) {
         $stringData = $i.") Found file: ".$file."\r\n";
-        $stringData .= "Hash: ".md5_file($file)."\r\n";
-        $i++;
-        fwrite($fh, $stringData);
-    }
+$stringData .= "Hash: ".md5_file($file)."\r\n";
+$i++;
+fwrite($fh, $stringData);
+}
 
-    fclose($fh);
+fclose($fh);
 
 }
 
@@ -128,22 +128,24 @@ if ($argv[1] == "compare") {
         $check = explode(" ", $line);
         if ($check[0] == "Hash:") {
             foreach ($clean_md5 as $clean_line_num => $clean_line) {
-                if ($check[1] == $clean_line) {
-                    break;
-                }
-                if (($clean_line_num + 1) == $clean_md5_size) {
-                    echo "Suspicious file found -> ".$pathname[1]."\r\n";
-                    $stringData = $i.") Suspicious file found -> ".$pathname[1]."\r\n";
-                    $i++;
-                    fwrite($fh, $stringData);
-                }
-            }
-        }
-        else {
-            $pathname = explode(": ", $line);
-        }
-    }
-    fclose($fh);
+                $md5_check = explode(" ", $clean_line);
+                if ($md5_check[0] == "Hash:") {  
+                    if ($check[1] == $md5_check[1]) {
+                      break;
+                  }
+                  if (($clean_line_num + 1) == $clean_md5_size) {
+                      echo "Suspicious file found -> ".$pathname[1]."\r\n";
+                      $stringData = $i.") Suspicious file found -> ".$pathname[1]."\r\n"; 
+                      $i++; 
+                      fwrite($fh, $stringData);
+                  }
+              }
+          }
+      } else {
+    $pathname = explode(": ", $line); 
+    } 
+}
+fclose($fh);
 }
 
 ?>
